@@ -7,12 +7,18 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import io.github.adamnain.cataloguemovie.db.DatabaseContract;
+import io.github.adamnain.cataloguemovie.db.FavoriteHelper;
+
+import static io.github.adamnain.cataloguemovie.db.DatabaseContract.AUTHORITY;
+import static io.github.adamnain.cataloguemovie.db.DatabaseContract.CONTENT_URI;
+
 public class FavoriteProvider extends ContentProvider{
     /*
        Integer digunakan sebagai identifier antara select all sama select by id
         */
-    private static final int NOTE = 1;
-    private static final int NOTE_ID = 2;
+    private static final int FAVORITE = 1;
+    private static final int FAVORITE_ID = 2;
 
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -25,20 +31,20 @@ public class FavoriteProvider extends ContentProvider{
     static {
 
         // content://com.dicoding.mynotesapp/note
-        sUriMatcher.addURI(AUTHORITY, DatabaseContract.TABLE_NOTE, NOTE);
+        sUriMatcher.addURI(AUTHORITY, DatabaseContract.TABLE_FAVORITE, FAVORITE);
 
         // content://com.dicoding.mynotesapp/note/id
         sUriMatcher.addURI(AUTHORITY,
-                DatabaseContract.TABLE_NOTE+ "/#",
-                NOTE_ID);
+                DatabaseContract.TABLE_FAVORITE+ "/#",
+                FAVORITE_ID);
     }
 
-    private NoteHelper noteHelper;
+    private FavoriteHelper favoriteHelper;
 
     @Override
     public boolean onCreate() {
-        noteHelper = new NoteHelper(getContext());
-        noteHelper.open();
+        favoriteHelper = new FavoriteHelper(getContext());
+        favoriteHelper.open();
         return true;
     }
 
@@ -51,11 +57,11 @@ public class FavoriteProvider extends ContentProvider{
     public Cursor query(@NonNull Uri uri, String[] strings, String s, String[] strings1, String s1) {
         Cursor cursor;
         switch(sUriMatcher.match(uri)){
-            case NOTE:
-                cursor = noteHelper.queryProvider();
+            case FAVORITE:
+                cursor = favoriteHelper.queryProvider();
                 break;
-            case NOTE_ID:
-                cursor = noteHelper.queryByIdProvider(uri.getLastPathSegment());
+            case FAVORITE_ID:
+                cursor = favoriteHelper.queryByIdProvider(uri.getLastPathSegment());
                 break;
             default:
                 cursor = null;
@@ -81,8 +87,8 @@ public class FavoriteProvider extends ContentProvider{
         long added ;
 
         switch (sUriMatcher.match(uri)){
-            case NOTE:
-                added = noteHelper.insertProvider(contentValues);
+            case FAVORITE:
+                added = favoriteHelper.insertProvider(contentValues);
                 break;
             default:
                 added = 0;
@@ -100,8 +106,8 @@ public class FavoriteProvider extends ContentProvider{
     public int update(@NonNull Uri uri, ContentValues contentValues, String s, String[] strings) {
         int updated ;
         switch (sUriMatcher.match(uri)) {
-            case NOTE_ID:
-                updated =  noteHelper.updateProvider(uri.getLastPathSegment(),contentValues);
+            case FAVORITE_ID:
+                updated =  favoriteHelper.updateProvider(uri.getLastPathSegment(),contentValues);
                 break;
             default:
                 updated = 0;
@@ -118,8 +124,8 @@ public class FavoriteProvider extends ContentProvider{
     public int delete(@NonNull Uri uri, String s, String[] strings) {
         int deleted;
         switch (sUriMatcher.match(uri)) {
-            case NOTE_ID:
-                deleted =  noteHelper.deleteProvider(uri.getLastPathSegment());
+            case FAVORITE_ID:
+                deleted =  favoriteHelper.deleteProvider(uri.getLastPathSegment());
                 break;
             default:
                 deleted = 0;

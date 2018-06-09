@@ -14,6 +14,18 @@
         android:layout_height="wrap_content"
         android:src="@drawable/warning" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_star"
+            android:layout_width="@dimen/star_size"
+            android:layout_height="@dimen/star_size"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_star_before" />
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/tv_title_detail"
         android:layout_width="wrap_content"

@@ -3,6 +3,8 @@
     package="io.github.adamnain.cataloguemovie">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <permission android:name="io.github.adamnain.cataloguemovie.READ_DATABASE" android:protectionLevel="normal" />
+    <permission android:name="io.github.adamnain.cataloguemovie.WRITE_DATABASE" android:protectionLevel="normal" />
 
     <application
         android:allowBackup="true"
@@ -19,12 +21,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".DetailActivity"
-            android:theme="@style/AppTheme"
-        />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_navbar"
-            android:theme="@style/AppThemeNoAction"></activity>
+            android:theme="@style/AppThemeNoAction"/>
+        <provider
+            android:authorities="io.github.adamnain.cataloguemovie"
+            android:name=".provider.FavoriteProvider"
+            android:exported="true"
+            android:readPermission="io.github.adamnain.cataloguemovie.READ_DATABASE"
+            android:writePermission="io.github.adamnain.cataloguemovie.WRITE_DATABASE" />
     </application>
 
 </manifest>

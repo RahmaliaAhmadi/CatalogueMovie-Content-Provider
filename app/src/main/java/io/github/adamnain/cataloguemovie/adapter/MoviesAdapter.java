@@ -85,6 +85,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             i.putExtra("backdrop", movies.getBackdropPath());
             i.putExtra("overview", movies.getOverview());
             i.putExtra("release", movies.getReleaseDate());
+            i.putExtra("cover", movies.getPosterPath());
 
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
             context.startActivity(i);
