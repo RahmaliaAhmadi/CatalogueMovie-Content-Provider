@@ -17,9 +17,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.github.adamnain.cataloguemovie.model.Favorite;
-import io.github.adamnain.cataloguemovie.provider.FavoriteProvider;
-
-import static android.os.Build.ID;
 import static io.github.adamnain.cataloguemovie.db.DatabaseContract.CONTENT_URI;
 import static io.github.adamnain.cataloguemovie.db.DatabaseContract.FavoriteColumns.BACKDROP;
 import static io.github.adamnain.cataloguemovie.db.DatabaseContract.FavoriteColumns.COVER;
@@ -46,7 +43,9 @@ public class DetailActivity extends AppCompatActivity {
 
     private Favorite favorite;
 
+    private long id;
 
+    private String title, cover, backdrop, release, overview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,20 +55,26 @@ public class DetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         getIntentData();
         backButton();
-
         favoriteCheck();
 
     }
 
 
     private void getIntentData(){
-        String imgPath = "http://image.tmdb.org/t/p/w185"+getIntent().getStringExtra("backdrop");
+        title = getIntent().getStringExtra("title");
+        cover = getIntent().getStringExtra("cover");
+        backdrop = getIntent().getStringExtra("backdrop");
+        release = getIntent().getStringExtra("release");
+        overview = getIntent().getStringExtra("overview");
+
+
+        String imgPath = "http://image.tmdb.org/t/p/w185"+backdrop;
         Glide.with(this)
                 .load(imgPath)
                 .into(imgBackdrop);
-        tvTitle.setText(getIntent().getStringExtra("title"));
-        tvRelease.setText(getIntent().getStringExtra("release"));
-        tvOverview.setText(getIntent().getStringExtra("overview"));
+        tvTitle.setText(title);
+        tvRelease.setText(cover);
+        tvOverview.setText(overview);
     }
 
     //untuk enampilkan back button
@@ -90,42 +95,49 @@ public class DetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.iv_star)
     public void submitFavorite(){
-        String title = getIntent().getStringExtra("title");
-        String cover = getIntent().getStringExtra("cover");
-        String backdrop = getIntent().getStringExtra("backdrop");
-        String release = getIntent().getStringExtra("release");
-        String overview = getIntent().getStringExtra("overview");
+        if(favoriteCheck() == true){
+            Uri uri = Uri.parse(CONTENT_URI+"/"+id);
+            getContentResolver().delete(uri, null, null);
+            Toast.makeText(this, title+" sudah tidak difavoritkan", Toast.LENGTH_SHORT).show();
+            ivStar.setImageResource(R.drawable.ic_star_before);
+        }
+        else{
+            ContentValues values = new ContentValues();
+            values.put(TITLE,title);
+            values.put(COVER,cover);
+            values.put(BACKDROP,backdrop);
+            values.put(RELEASE,release);
+            values.put(OVERVIEW,overview);
 
-        ContentValues values = new ContentValues();
-        values.put(TITLE,title);
-        values.put(COVER,cover);
-        values.put(BACKDROP,backdrop);
-        values.put(RELEASE,release);
-        values.put(OVERVIEW,overview);
+            getContentResolver().insert(CONTENT_URI,values);
 
-        getContentResolver().insert(CONTENT_URI,values);
+            Toast.makeText(this, title+" Sudah Masuk Favorite", Toast.LENGTH_SHORT).show();
+            setResult(101);
+            finish();
+        }
 
-        Toast.makeText(this, title, Toast.LENGTH_SHORT).show();
-        setResult(101);
-        finish();
     }
 
-    private void favoriteCheck(){
-//        FavoriteProvider favoriteProvider = new FavoriteProvider(getApplicationContext());
-////        favoriteProvider.query(CONTENT_URI,)
-//        String[] mSelectionArgs = {getIntent().getStringExtra("title")};
-        String[] id = {ID};
-        Cursor cursor = getContentResolver().query(
-                CONTENT_URI,
-                id,
-                "title LIKE ?",
-                new String[]{getIntent().getStringExtra("title")+"%"},
-                null
-        );
+    public boolean favoriteCheck(){
+        Uri uri = Uri.parse(CONTENT_URI+"");
+        boolean favorite = false;
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
 
-        if(cursor != null){
-            Toast.makeText(this, id[0]+"sudah favorit", Toast.LENGTH_SHORT).show();
+        String getTitle;
+        if (cursor.moveToFirst()) {
+            do {
+                id = cursor.getLong(0);
+                getTitle = cursor.getString(1);
+                if (getTitle.equals(getIntent().getStringExtra("title"))){
+                    ivStar.setImageResource(R.drawable.ic_star_after);
+                    favorite = true;
+                }
+            } while (cursor.moveToNext());
+
         }
+
+        return favorite;
+
     }
 
 }

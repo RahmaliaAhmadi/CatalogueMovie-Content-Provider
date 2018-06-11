@@ -74,7 +74,7 @@ public class FavoriteHelper {
 
     /**
      * Gunakan method ini untuk query insert
-     * @param note model note yang akan dimasukkan
+     * @param favorite model note yang akan dimasukkan
      * @return id dari data yang baru saja dimasukkan
      */
     public long insert(Favorite favorite){
@@ -89,7 +89,7 @@ public class FavoriteHelper {
 
     /**
      * Gunakan method ini untuk query update
-     * @param note model note yang akan diubah
+     * @param favorite model note yang akan diubah
      * @return int jumlah dari row yang ter-update, jika tidak ada yang diupdate maka nilainya 0
      */
     public int update(Favorite favorite){

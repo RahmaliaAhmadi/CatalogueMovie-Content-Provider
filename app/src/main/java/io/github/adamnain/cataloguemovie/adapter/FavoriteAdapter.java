@@ -12,11 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import io.github.adamnain.cataloguemovie.DetailActivity;
 import io.github.adamnain.cataloguemovie.R;
 import io.github.adamnain.cataloguemovie.model.Favorite;
+import io.github.adamnain.cataloguemovie.model.Result;
 
 import static io.github.adamnain.cataloguemovie.db.DatabaseContract.CONTENT_URI;
 
@@ -36,7 +39,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
     @Override
     public FavoriteViewholder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_movies, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_movies, null, false);
         return new FavoriteViewholder(view);
     }
 
@@ -50,7 +53,6 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         holder.tvTitle.setText(movies.getTitle());
         holder.tvOverview.setText(movies.getOverview());
         holder.tvRealease.setText(movies.getRelease());
-
     }
 
     @Override
@@ -80,5 +82,6 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
             tvRealease = itemView.findViewById(R.id.tv_release_date);
 
         }
+
     }
 }

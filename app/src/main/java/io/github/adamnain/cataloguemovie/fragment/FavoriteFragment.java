@@ -19,6 +19,7 @@ import io.github.adamnain.cataloguemovie.adapter.FavoriteAdapter;
 import io.github.adamnain.cataloguemovie.db.FavoriteHelper;
 import io.github.adamnain.cataloguemovie.model.Favorite;
 
+import static android.provider.BaseColumns._ID;
 import static io.github.adamnain.cataloguemovie.db.DatabaseContract.CONTENT_URI;
 
 /**
@@ -51,7 +52,7 @@ public class FavoriteFragment extends Fragment {
         rvMovies.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvMovies.setHasFixedSize(true);
 
-        list = getActivity().getContentResolver().query(CONTENT_URI,null,null,null,null);
+        list = getActivity().getContentResolver().query(CONTENT_URI,null,null,null,_ID + " DESC" );
         adapter = new FavoriteAdapter(getActivity());
         adapter.setListFavorit(list);
         rvMovies.setAdapter(adapter);
